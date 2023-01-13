@@ -75,12 +75,28 @@ class ReadMoreOption(
                     textView.text = text
                     return@Runnable
                 }
-                val lp = textView.layoutParams as MarginLayoutParams
-                val subString = text.toString().substring(
-                    textView.layout.getLineStart(0),
-                    textView.layout.getLineEnd(textLength - 1)
-                )
-                textLengthNew = subString.length - (moreLabel!!.length + 4 + lp.rightMargin / 6)
+                
+                //get start index for last line
+                val startIndex = textView.layout.getLineStart(textLength - 1);
+                //get end index for last line
+                val endIndex = textView.layout.getLineEnd(textLength - 1);
+                //check char count for last line
+                val charCount = endIndex - startIndex;
+                //more label length
+                val moreLabelLength = moreLabel!!.length + 4 + lp.rightMargin / 6
+                
+                //check if char count is greater than or equals more label length.
+                if (charCount >= moreLabelLength) {
+                    val lp = textView.layoutParams as MarginLayoutParams
+                    val subString = text.toString().substring(
+                        textView.layout.getLineStart(0),
+                        textView.layout.getLineEnd(textLength - 1)
+                    )
+                    textLengthNew = subString.length - (moreLabel!!.length + 4 + lp.rightMargin / 6)   
+                }else{
+                    textView.text = text
+                    return@Runnable
+                }
             }
             val spannableStringBuilder = SpannableStringBuilder(text.subSequence(0, textLengthNew))
                 .append("...")
